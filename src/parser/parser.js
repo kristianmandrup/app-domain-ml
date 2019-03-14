@@ -30,6 +30,8 @@
   const SetLit = createToken({ name: "SetLit", pattern: /set/ });
   const TodoLit = createToken({ name: "TodoLit", pattern: /TODO/ });
   const ToLit = createToken({ name: "ToLit", pattern: /to/ });
+  const FromLit = createToken({ name: "FromLit", pattern: /from/ });
+  const InLit = createToken({ name: "InLit", pattern: /in/ });
 
   const StringTypeLiteral = createToken({
     name: "StringTypeLiteral",
@@ -180,6 +182,7 @@
     Comma,
     Colon,
     TodoLit,
+    FromLit,
     For,
     Each,
     If,
@@ -190,7 +193,6 @@
     Not,
     Validate,
     Valid,
-    Invalid,
     Check,
     Add,
     Update,
@@ -203,14 +205,16 @@
     Return,
     Substep,
     InputsLiteral,
-    OutputsLiteral,
     Input,
+    Invalid,
+    IntegerTypeLiteral,
+    InLit,
+    OutputsLiteral,
     Output,
     Dependencies,
     SuccessLiteral,
     ErrorLiteral,
     StringTypeLiteral,
-    IntegerTypeLiteral,
     DecimalTypeLiteral,
     StartingLiteral,
     EndingLiteral,
@@ -275,16 +279,63 @@
         $.CONSUME(StringLiteral);
       });
 
-      $.RULE("sendToExpression", () => {
-        $.CONSUME(Send);
+      $.RULE("toAction", () => {
+        $.OR([{ ALT: () => $.CONSUME(Add) }, { ALT: () => $.CONSUME(Send) }]);
+      });
+
+      $.RULE("fromAction", () => {
+        $.OR([
+          { ALT: () => $.CONSUME(Delete) },
+          { ALT: () => $.CONSUME(GetLit) }
+        ]);
+      });
+
+      $.RULE("inAction", () => {
+        $.OR([
+          { ALT: () => $.CONSUME(Create) },
+          { ALT: () => $.CONSUME(Update) },
+          {
+            ALT: () => $.CONSUME(Check)
+          }
+        ]);
+      });
+
+      $.RULE("actToExpression", () => {
+        $.SUBRULE($.toAction, { LABEL: "actionTo" });
         $.SUBRULE($.multipleIdentifiersExpression, { LABEL: "ids" });
         $.OPTION(() => {
           $.SUBRULE($.toExpression, { LABEL: "to" });
         });
       });
 
+      $.RULE("actInExpression", () => {
+        $.SUBRULE($.inAction, { LABEL: "actionIn" });
+        $.SUBRULE($.multipleIdentifiersExpression, { LABEL: "ids" });
+        $.OPTION(() => {
+          $.SUBRULE($.inExpression, { LABEL: "in" });
+        });
+      });
+
+      $.RULE("actFromExpression", () => {
+        $.SUBRULE($.fromAction, { LABEL: "actionFrom" });
+        $.SUBRULE($.multipleIdentifiersExpression, { LABEL: "ids" });
+        $.OPTION(() => {
+          $.SUBRULE($.fromExpression, { LABEL: "from" });
+        });
+      });
+
+      $.RULE("inExpression", () => {
+        $.CONSUME(InLit);
+        $.SUBRULE($.nestedIdentifierExpression, { LABEL: "nestedId" });
+      });
+
       $.RULE("toExpression", () => {
         $.CONSUME(ToLit);
+        $.SUBRULE($.nestedIdentifierExpression, { LABEL: "nestedId" });
+      });
+
+      $.RULE("fromExpression", () => {
+        $.CONSUME(FromLit);
         $.SUBRULE($.nestedIdentifierExpression, { LABEL: "nestedId" });
       });
 
@@ -572,7 +623,13 @@
       $.RULE("processBodyLineExpression", () => {
         $.OR([
           {
-            ALT: () => $.SUBRULE($.sendToExpression, { LABEL: "sendTo" })
+            ALT: () => $.SUBRULE($.actInExpression, { LABEL: "actIn" })
+          },
+          {
+            ALT: () => $.SUBRULE($.actFromExpression, { LABEL: "actFrom" })
+          },
+          {
+            ALT: () => $.SUBRULE($.actToExpression, { LABEL: "actTo" })
           },
           {
             ALT: () => $.SUBRULE($.ifThenElseExpression, { LABEL: "if" })
@@ -618,21 +675,6 @@
       $.RULE("action", () => {
         $.OR([
           {
-            ALT: () => $.CONSUME(Add)
-          },
-          {
-            ALT: () => $.CONSUME(Create)
-          },
-          {
-            ALT: () => $.CONSUME(Update)
-          },
-          {
-            ALT: () => $.CONSUME(Delete)
-          },
-          {
-            ALT: () => $.CONSUME(Check)
-          },
-          {
             ALT: () => $.CONSUME(Verify)
           },
           {
@@ -640,9 +682,6 @@
           },
           {
             ALT: () => $.CONSUME(Validate)
-          },
-          {
-            ALT: () => $.CONSUME(GetLit)
           },
           {
             ALT: () => $.CONSUME(SetLit)
@@ -980,12 +1019,40 @@
       let result = this.visit(ctx.act);
     }
 
-    sendToExpression(ctx) {
-      let result = this.visit(ctx.sendTo);
+    toAction(ctx) {
+      let result = this.visit(ctx.action);
+    }
+
+    actToExpression(ctx) {
+      let result = this.visit(ctx.actTo);
+    }
+
+    inAction(ctx) {
+      let result = this.visit(ctx.action);
+    }
+
+    actInExpression(ctx) {
+      let result = this.visit(ctx.actIn);
+    }
+
+    fromAction(ctx) {
+      let result = this.visit(ctx.action);
+    }
+
+    actFromExpression(ctx) {
+      let result = this.visit(ctx.actFrom);
     }
 
     toExpression(ctx) {
       let result = this.visit(ctx.to);
+    }
+
+    inExpression(ctx) {
+      let result = this.visit(ctx.in);
+    }
+
+    fromExpression(ctx) {
+      let result = this.visit(ctx.from);
     }
 
     doBodyExpression(ctx) {

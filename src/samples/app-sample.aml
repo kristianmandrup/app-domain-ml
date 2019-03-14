@@ -37,41 +37,41 @@ Workflow: "Place order"
       InvalidOrder
   effects:
     send: "Acknowledgement to customer"
+    
   process:
     do ValidateOrder
       if order is invalid then
         add InvalidOrder
-        stop
     do ProcessOrder    
     do SendAcknowledgementToCustomer
     do OrderPlaced
     
-substep ValidateOrder =
-  input: UnvalidatedOrder
-  output: ValidatedOrder OR ValidationError
-  dependencies: CheckProductCodeExists, CheckAdressExists
-  
-  process:
-    validate Customer name
-    check Shipping and Billing Address exists
-    for each line:
-      check product code syntax
-      check product code exists in ProductCatalog
-    
-    if ok then
-      return ValidatedOrder
-    else
-      return ValidationError
+ substep ValidateOrder =
+   input: UnvalidatedOrder
+   output: ValidatedOrder OR ValidationError
+   dependencies: CheckProductCodeExists, CheckAdressExists
+   
+   process:
+     validate customer name
+     check shipping and billing address exists
+     for each line:
+       check product code syntax
+       check product code exists in ProductCatalog
+     
+     if ok then
+       return ValidatedOrder
+     else
+       return ValidationError
 
 substep PriceOrder =
   input: ValidatedOrder
   output: PricedOrder
   dependencies: GetProductPrice
-
-process:
-  for each line:
-    get price of product
-    set price of line
+  
+  process:
+    for each line:
+      get price of product
+      set price of line
 
 substep SendAcknowledgeMentToCustomer =
   input: PriceOrder
