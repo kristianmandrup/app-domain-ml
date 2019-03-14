@@ -432,13 +432,6 @@
         $.SUBRULE($.dataBodyExpression, { LABEL: "dataBody" });
       });
 
-      $.RULE("typeExpression", () => {
-        $.CONSUME(TypeLiteral);
-        $.CONSUME(Identifier);
-        $.CONSUME(Is);
-        $.SUBRULE($.isTypeExpression, { LABEL: "isType" });
-      });
-
       $.RULE("numberTypeExpression", () => {
         $.OR([
           {
@@ -457,22 +450,6 @@
           },
           {
             ALT: () => $.CONSUME(StringTypeLiteral)
-          }
-        ]);
-      });
-
-      $.RULE("isTypeExpression", () => {
-        $.OR([
-          {
-            ALT: () =>
-              $.SUBRULE($.numberTypeExpression, { LABEL: "numberType" })
-          },
-          {
-            ALT: () =>
-              $.SUBRULE($.stringTypeExpression, { LABEL: "stringType" })
-          },
-          {
-            ALT: () => $.CONSUME(DecimalTypeLiteral)
           }
         ]);
       });
@@ -515,10 +492,16 @@
         ]);
       });
 
-      $.RULE("stringIfConstraintExpression", () => {
+      $.RULE("stringConstraintExpression", () => {
         $.SUBRULE($.stringTypeExpression, { LABEL: "stringType" });
-        $.SUBRULE($.positionExpression, { LABEL: "pos" });
-        $.SUBRULE($.withStringExpression, { LABEL: "with" });
+        $.OPTION(() => {
+          $.SUBRULE($.positionExpression, { LABEL: "pos" });
+          $.SUBRULE($.withStringExpression, { LABEL: "with" });
+          $.SUBRULE($.stringOptThenExpression, { LABEL: "optThen" });
+        });
+      });
+
+      $.RULE("stringOptThenExpression", () => {
         $.OPTION(() => {
           $.SUBRULE($.stringThenConstraintExpression, { LABEL: "then" });
         });
@@ -526,8 +509,10 @@
 
       $.RULE("integerConstraintExpression", () => {
         $.SUBRULE($.numberTypeExpression, { LABEL: "numberType" });
-        $.CONSUME(BetweenLiteral);
-        $.SUBRULE($.integerBetweenExpression, { LABEL: "between" });
+        $.OPTION(() => {
+          $.CONSUME(BetweenLiteral);
+          $.SUBRULE($.integerBetweenExpression, { LABEL: "between" });
+        });
       });
 
       $.RULE("integerBetweenExpression", () => {
@@ -550,8 +535,10 @@
 
       $.RULE("decimalConstraintExpression", () => {
         $.CONSUME(DecimalTypeLiteral);
-        $.CONSUME(BetweenLiteral);
-        $.SUBRULE($.decimalBetweenExpression, { LABEL: "between" });
+        $.OPTION(() => {
+          $.CONSUME(BetweenLiteral);
+          $.SUBRULE($.decimalBetweenExpression, { LABEL: "between" });
+        });
       });
 
       $.RULE("moreDataBodyExpression", () => {
@@ -580,7 +567,7 @@
           },
           {
             ALT: () =>
-              $.SUBRULE($.stringIfConstraintExpression, { LABEL: "string" })
+              $.SUBRULE($.stringConstraintExpression, { LABEL: "string" })
           }
         ]);
       });
@@ -600,19 +587,8 @@
       $.RULE("domainExpression", () => {
         $.SUBRULE($.boundedContextExpression, { LABEL: "context" });
         $.MANY(() => {
-          $.SUBRULE($.dataAndTypeExpressions, { LABEL: "dataType" });
+          $.SUBRULE($.dataExpression, { LABEL: "dataType" });
         });
-      });
-
-      $.RULE("dataAndTypeExpressions", () => {
-        $.OR([
-          {
-            ALT: () => $.SUBRULE($.dataExpression, { LABEL: "data" })
-          },
-          {
-            ALT: () => $.SUBRULE($.typeExpression, { LABEL: "type" })
-          }
-        ]);
       });
 
       $.RULE("workflowBodyExpression", () => {
@@ -1003,12 +979,16 @@
       let result = this.visit(ctx.pos);
     }
 
-    stringIfConstraintExpression(ctx) {
+    stringConstraintExpression(ctx) {
       let result = this.visit(ctx.if);
     }
 
     stringThenConstraintExpression(ctx) {
       let result = this.visit(ctx.then);
+    }
+
+    stringOptThenExpression(ctx) {
+      let result = this.visit(ctx.optThen);
     }
 
     stringThenDigitsExpression(ctx) {
@@ -1141,14 +1121,6 @@
 
     otherExpression(ctx) {
       let result = this.visit(ctx.other);
-    }
-
-    typeExpression(ctx) {
-      let result = this.visit(ctx.type);
-    }
-
-    isTypeExpression(ctx) {
-      let result = this.visit(ctx.isType);
     }
 
     numberTypeExpression(ctx) {
