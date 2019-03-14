@@ -5,11 +5,16 @@ data Order =
   AND ShippingAddress
   
 data Order_Quantity = UnitQuantity OR KilogramQuantity
-data UnitQuantity = integer between 1 and 10
+data UnitQuantity = number between 1 and 10
 data KilogramQuantity = decimal between 2.02 and 2.3
 
 data WidgetCode = string starting with "W" then 4 digits
 data ProductCode = string ending with "P" then 2 digits
+
+type ProductCode is text
+type WidgetCode is string
+type KilogramQuantity is decimal
+type UnitQuantity is number
 
 data UnvalidatedOrder =
   UnvalidatedCustomerInfo

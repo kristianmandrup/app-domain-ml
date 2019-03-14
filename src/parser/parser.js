@@ -32,6 +32,7 @@
   const ToLit = createToken({ name: "ToLit", pattern: /to/ });
   const FromLit = createToken({ name: "FromLit", pattern: /from/ });
   const InLit = createToken({ name: "InLit", pattern: /in/ });
+  const TypeLiteral = createToken({ name: "TypeLiteral", pattern: /type/ });
 
   const StringTypeLiteral = createToken({
     name: "StringTypeLiteral",
@@ -44,6 +45,14 @@
   const DecimalTypeLiteral = createToken({
     name: "DecimalTypeLiteral",
     pattern: /decimal/
+  });
+  const NumberTypeLiteral = createToken({
+    name: "NumberTypeLiteral",
+    pattern: /number/
+  });
+  const TextTypeLiteral = createToken({
+    name: "TextTypeLiteral",
+    pattern: /text/
   });
 
   const StartingLiteral = createToken({
@@ -177,6 +186,7 @@
     AndLiteral,
     Or,
     ToLit,
+    TypeLiteral,
     GetLit,
     SetLit,
     Comma,
@@ -216,6 +226,8 @@
     ErrorLiteral,
     StringTypeLiteral,
     DecimalTypeLiteral,
+    NumberTypeLiteral,
+    TextTypeLiteral,
     StartingLiteral,
     EndingLiteral,
     WithLiteral,
@@ -420,6 +432,51 @@
         $.SUBRULE($.dataBodyExpression, { LABEL: "dataBody" });
       });
 
+      $.RULE("typeExpression", () => {
+        $.CONSUME(TypeLiteral);
+        $.CONSUME(Identifier);
+        $.CONSUME(Is);
+        $.SUBRULE($.isTypeExpression, { LABEL: "isType" });
+      });
+
+      $.RULE("numberTypeExpression", () => {
+        $.OR([
+          {
+            ALT: () => $.CONSUME(IntegerTypeLiteral)
+          },
+          {
+            ALT: () => $.CONSUME(NumberTypeLiteral)
+          }
+        ]);
+      });
+
+      $.RULE("stringTypeExpression", () => {
+        $.OR([
+          {
+            ALT: () => $.CONSUME(TextTypeLiteral)
+          },
+          {
+            ALT: () => $.CONSUME(StringTypeLiteral)
+          }
+        ]);
+      });
+
+      $.RULE("isTypeExpression", () => {
+        $.OR([
+          {
+            ALT: () =>
+              $.SUBRULE($.numberTypeExpression, { LABEL: "numberType" })
+          },
+          {
+            ALT: () =>
+              $.SUBRULE($.stringTypeExpression, { LABEL: "stringType" })
+          },
+          {
+            ALT: () => $.CONSUME(DecimalTypeLiteral)
+          }
+        ]);
+      });
+
       $.RULE("andDataBodyExpression", () => {
         $.CONSUME(And);
         $.OPTION(() => $.CONSUME(ListOfLiteral));
@@ -459,7 +516,7 @@
       });
 
       $.RULE("stringIfConstraintExpression", () => {
-        $.CONSUME(StringTypeLiteral);
+        $.SUBRULE($.stringTypeExpression, { LABEL: "stringType" });
         $.SUBRULE($.positionExpression, { LABEL: "pos" });
         $.SUBRULE($.withStringExpression, { LABEL: "with" });
         $.OPTION(() => {
@@ -468,7 +525,7 @@
       });
 
       $.RULE("integerConstraintExpression", () => {
-        $.CONSUME(IntegerTypeLiteral);
+        $.SUBRULE($.numberTypeExpression, { LABEL: "numberType" });
         $.CONSUME(BetweenLiteral);
         $.SUBRULE($.integerBetweenExpression, { LABEL: "between" });
       });
@@ -543,8 +600,19 @@
       $.RULE("domainExpression", () => {
         $.SUBRULE($.boundedContextExpression, { LABEL: "context" });
         $.MANY(() => {
-          $.SUBRULE($.dataExpression, { LABEL: "data" });
+          $.SUBRULE($.dataAndTypeExpressions, { LABEL: "dataType" });
         });
+      });
+
+      $.RULE("dataAndTypeExpressions", () => {
+        $.OR([
+          {
+            ALT: () => $.SUBRULE($.dataExpression, { LABEL: "data" })
+          },
+          {
+            ALT: () => $.SUBRULE($.typeExpression, { LABEL: "type" })
+          }
+        ]);
       });
 
       $.RULE("workflowBodyExpression", () => {
@@ -1073,6 +1141,26 @@
 
     otherExpression(ctx) {
       let result = this.visit(ctx.other);
+    }
+
+    typeExpression(ctx) {
+      let result = this.visit(ctx.type);
+    }
+
+    isTypeExpression(ctx) {
+      let result = this.visit(ctx.isType);
+    }
+
+    numberTypeExpression(ctx) {
+      let result = this.visit(ctx.numberType);
+    }
+
+    stringTypeExpression(ctx) {
+      let result = this.visit(ctx.stringType);
+    }
+
+    dataAndTypeExpressions(ctx) {
+      let result = this.visit(ctx.dataType);
     }
   }
 
