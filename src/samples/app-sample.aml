@@ -11,10 +11,7 @@ data KilogramQuantity = decimal between 2.02 and 2.3
 data WidgetCode = string starting with "W" then 4 digits
 data ProductCode = string ending with "P" then 2 digits
 
-type ProductCode is text
-type WidgetCode is string
-type KilogramQuantity is decimal
-type UnitQuantity is number
+data MyProductCode = text
 
 data UnvalidatedOrder =
   UnvalidatedCustomerInfo
@@ -86,3 +83,6 @@ substep SendAcknowledgeMentToCustomer =
   process:  
     create acknowledgement letter 
     send acknowledgement letter and priced order to customer
+  
+  
+     
