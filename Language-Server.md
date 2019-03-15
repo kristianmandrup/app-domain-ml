@@ -1,5 +1,18 @@
 # Language Server
 
+[Langserver.org](https://langserver.org/)
+
+Langserver.org is a community-driven site, maintained by Sourcegraph, to track development progress of LSP-compatible language servers and clients.
+
+This site contains a huge list of language server implementations for various languages, indicating how much support is included:
+
+- Code completion
+- Hover
+- Jump to definition
+- Workspace symbols
+- Find references
+- Diagnostics
+
 ## VS Code guides
 
 - [Syntax Highlight Guide](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide)
@@ -9,6 +22,10 @@
 - [Language Server Extension Guide](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide)
 
 - [Protocol specifications](https://microsoft.github.io/language-server-protocol/specification)
+
+### Visual Studio
+
+- [Add a Language Server Protocol extension](https://docs.microsoft.com/en-us/visualstudio/extensibility/adding-an-lsp-extension?view=vs-2017)
 
 ## Examples
 
@@ -33,8 +50,3 @@ Follow the example...
 - [Why You Should Know the Language Server Protocol](https://tomassetti.me/what-is-the-language-server-protocol/)
 - [Building a Language Server for DOT with Visual Studio Code](https://tomassetti.me/language-server-dot-visual-studio/)
 - [repo: server DOT language](https://github.com/unosviluppatore/language-server-dot)
-
-### XText language
-
-- [Building a VS Code Extension with Xtext and the Language Server Protocol](http://typefox.io/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol)
-- [repo: languageserver-example](https://github.com/TypeFox/languageserver-example)
