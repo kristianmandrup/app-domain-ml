@@ -4,6 +4,17 @@ Heavily documented sample code for https://code.visualstudio.com/api/language-ex
 
 See [language-server-dot-visual-studio](https://tomassetti.me/language-server-dot-visual-studio/) for a more complete example
 
+## Create LSP project
+
+To create an LSP project from scratch, use the Yo code generator:
+
+```bash
+$ npm install -g yo generator-code
+$ yo code
+```
+
+![](./images/yo-generator.png)
+
 ## Functionality
 
 This Language Server works for plain text file. It has the following language features:

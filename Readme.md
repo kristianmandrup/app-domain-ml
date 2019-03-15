@@ -2,9 +2,12 @@
 
 Inspired by the domain modelling language in the book: [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
 
-## IDE support
+## IDE support with Language Server
 
-VS Code support will be coming in the near future. See [./Language-Server.md] for more details.
+VS Code support will be coming in the near future. See [Language Server](./Language-Server.md) for more details. An LSP client/server sample implementation has been started in the [lsp](./lsp) folder.
+Docs with LSP usage instructions can be found [here](./lsp/docs/Readme.md)
+
+Please help out make this a reality!
 
 ## Usage
 
