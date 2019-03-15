@@ -85,15 +85,32 @@ This should open a new Visual Studio Code with
 
 ![](./images/debug-session-window.png)
 
+When the Debug window loads, make sure any extensions causing errors are disabled.
+I had to disable a .NET Solution Explorer extension (for `.sln` files).
+
 #### Write text file
 
-Create a test file in the root (save anywhere)
+Create a test file in the root folder of the Debug project (save anywhere)
+
+Create a file such as `test.txt`
 
 ```txt
-typescript lets you write JavaScript the way you really want to.
+typescrip is a typed superset of JavaScript that compiles to plain JavaScript.
+Any browser. Any host. Any OS. Open Source.
+```
+
+Now write the missing ending `t` in the word `typescript`.
+
+```txt
 typescript is a typed superset of JavaScript that compiles to plain JavaScript.
 Any browser. Any host. Any OS. Open Source.
 ```
+
+You should see a code hint (popup) with suggestions (actions), such as changing the word to `TypeScript`. Select the suggestion and see the word change to reflect the suggestion.
+
+![](./images/code-hint.png)
+
+Awesome!
 
 ## Debug server
 
@@ -101,3 +118,16 @@ Any browser. Any host. Any OS. Open Source.
 - In the [Extension Development Host] instance of VSCode, open a document in 'plain text' language mode.
   - Type `j` or `t` to see `Javascript` and `TypeScript` completion.
   - Enter text content such as `AAA aaa BBB`. The extension will emit diagnostics for all words in all-uppercase.
+
+## Continue from here
+
+Please see the other resources in [../../Language-Server.md]
+
+The VS Code guide [Implement your own Language Server](https://vscode.readthedocs.io/en/latest/extensions/example-language-server/) contains a reference to a repo with many useful examples, such as
+
+[lsp-sample repository](https://github.com/Microsoft/vscode-extension-samples/tree/master/lsp-sample) from [Microsoft/vscode-extension-samples] which has been used as a base for this example.
+
+In particular, look at the blog post and repo for the DOT language as a useful guide:
+
+- [Building a Language Server for DOT with Visual Studio Code](https://tomassetti.me/language-server-dot-visual-studio/)
+- [repo: server DOT language](https://github.com/unosviluppatore/language-server-dot)
