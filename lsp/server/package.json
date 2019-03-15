@@ -1,0 +1,18 @@
+{
+  "name": "aml-server",
+  "description": "Sample implementation AML language server in node.",
+  "version": "1.0.0",
+  "author": "Kristian Mandrup",
+  "license": "MIT",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kristianmandrup/application-model-language"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^5.3.0-next.1"
+  },
+  "scripts": {}
+}
