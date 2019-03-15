@@ -8,6 +8,8 @@
 - [Programmatic Language Features](https://code.visualstudio.com/api/language-extensions/programmatic-language-features)
 - [Language Server Extension Guide](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide)
 
+- [Protocol specifications](https://microsoft.github.io/language-server-protocol/specification)
+
 ## Examples
 
 ### VS Code tutorial
@@ -28,8 +30,11 @@ Follow the example...
 
 ### DOT language
 
-[Building a Language Server for DOT with Visual Studio Code](https://tomassetti.me/language-server-dot-visual-studio/)
+- [Why You Should Know the Language Server Protocol](https://tomassetti.me/what-is-the-language-server-protocol/)
+- [Building a Language Server for DOT with Visual Studio Code](https://tomassetti.me/language-server-dot-visual-studio/)
+- [repo: server DOT language](https://github.com/unosviluppatore/language-server-dot)
 
 ### XText language
 
-[Building a VS Code Extension with Xtext and the Language Server Protocol](http://typefox.io/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol)
+- [Building a VS Code Extension with Xtext and the Language Server Protocol](http://typefox.io/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol)
+- [repo: languageserver-example](https://github.com/TypeFox/languageserver-example)
