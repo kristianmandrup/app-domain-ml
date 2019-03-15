@@ -2,6 +2,10 @@
 
 Inspired by the domain modelling language in the book: [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
 
+## IDE support
+
+VS Code support will be coming in the near future. See [./Language-Server.md] for more details.
+
 ## Usage
 
 Open [chevrotain playground](https://sap.github.io/chevrotain/playground/)
